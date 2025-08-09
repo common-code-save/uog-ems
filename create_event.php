@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         
         <button type="submit" class="btn btn-primary">Create Event</button>
-        <a href="events_calendar.php" class="btn btn-secondary">Cancel</a>
+        <a href="dashboard.php" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 </body>

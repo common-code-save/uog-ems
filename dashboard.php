@@ -27,7 +27,7 @@ $userRole = $_SESSION['user']['role'];
         <nav class="sidebar-nav">
             <ul>
             <li class="active"><a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="calendar.php"><i class="fas fa-calendar"></i> Events</a></li>
+                <li><a href="events_calendar.php"><i class="fas fa-calendar"></i> Events</a></li>
                 <?php if($userRole === 'admin' || $userRole === 'organizer'): ?>
                     <li><a href="create_event.php"><i class="fas fa-plus"></i> Create Event</a></li>
                 <?php endif; ?>
@@ -108,7 +108,7 @@ $userRole = $_SESSION['user']['role'];
                     }
                     ?>
                 </div>
-                <a href="calendar.php" class="btn btn-secondary">View All Events</a>
+                <a href="events_calendar.php" class="btn btn-secondary">View All Events</a>
             </section>
             
             <?php if($userRole === 'admin' || $userRole === 'organizer'): ?>

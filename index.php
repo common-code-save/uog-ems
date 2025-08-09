@@ -7,21 +7,28 @@ include 'db.php';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title> University of Gondar Event Management System</title>
+    <title>University of Gondar Event Management System</title>
 
-    <!-- ✅ CSS Link -->
-     <!-- Update path if needed -->
+    <!-- Font Awesome for icons (CDN link) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+          integrity="sha512-papbRLFdaA5F3HLN8AlRRg9DJ9TfxKk/1ZMb3Y9Pl0EKMBkM8CMzOMg7PcSzT3jNSMDtUl2CdpKXh8u6lQ7+Eg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- Optional: Font Awesome for icons -->
-    <link rel="stylesheet" href="css\stele.css">
+    <!-- Your external CSS -->
+    <link rel="stylesheet" href="css/stele.css">
 </head>
 <body>
 
 <?php include 'header.php'; ?>
 
-<div class="hero" style="align-item:center">
-    <h1> welcome University of Gondar Event Management System</h1>
-    <p>Streamlining university events from planning to reporting</p>
+<div class="hero" style="align-items:center; text-align:center; padding: 60px 20px;">
+    <h1>Welcome to the University of Gondar Event Management System</h1>
+    <p class="hero-subtitle">Streamlining university events from planning to reporting with ease and efficiency.</p>
+
+    <p class="hero-description">
+        Whether you are a student, staff, or organizer, our system helps you stay connected with all upcoming events on campus.
+        Create events, register online, and track event analytics all in one place. Join us in making the University of Gondar a vibrant community with engaging and well-organized events.
+    </p>
+
     <div class="hero-buttons">
         <a href="login.php" class="btn btn-primary">Login</a>
         <a href="firstlogin.php" class="btn btn-secondary">View Events</a>
@@ -46,7 +53,7 @@ include 'db.php';
     </div>
 </div>
 
-</body>
-</html>
 <?php include 'footer.php'; ?>
 
+</body>
+</html>
