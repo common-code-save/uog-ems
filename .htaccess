@@ -1,0 +1,17 @@
+RewriteEngine On
+RewriteBase /
+
+# Redirect to HTTPS (only if SSL configured)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Remove .php extension
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [NC,L]
+
+# Custom routes
+RewriteRule ^events/([0-9]+)/?$ events/view.php?id=$1 [NC,L,QSA]
+RewriteRule ^login/?$ auth/login.php [NC,L]
+RewriteRule ^register/?$ auth/register.php [NC,L]
+RewriteRule ^dashboard/?$ admin/dashboard.php [NC,L]
