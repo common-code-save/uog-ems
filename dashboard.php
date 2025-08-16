@@ -108,7 +108,7 @@ $userRole = $_SESSION['user']['role'];
                     }
                     ?>
                 </div>
-                <a href="events_calendar.php" class="btn btn-secondary">View All Events</a>
+                <a href="events_calendar.php" class="btn btn-secondary" style="color:blue">View All Events</a>
             </section>
             
             <?php if($userRole === 'admin' || $userRole === 'organizer'): ?>

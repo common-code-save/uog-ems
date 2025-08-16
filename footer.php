@@ -20,7 +20,7 @@
                 <h3>Quick Links</h3>
                 <ul>
                     <li><a href="index.php">Home</a></li>
-                    <li><a href="calendar.php">Events Calendar</a></li>
+                    <li><a href="events_calendar.php">Events Calendar</a></li>
                     <li><a href="login.php">Login</a></li>
                 </ul>
             </div>

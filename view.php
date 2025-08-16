@@ -134,7 +134,7 @@ if (isLoggedIn()) {
         <?php endif; ?>
         
         <?php if (isLoggedIn() && ($_SESSION['user']['id'] === $event['organizer_id'] || $_SESSION['user']['role'] === 'admin')): ?>
-            <a href="edit_event.php?id=<?php echo $event_id; ?>" class="btn btn-secondary">Edit Event</a>
+            <a href="edit_event.php?id=<?php echo $event_id; ?>" class="btn btn-secondary" style="background-color:yellow;color:blue">Edit Event</a>
         <?php endif; ?>
     </div>
     

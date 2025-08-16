@@ -18,7 +18,7 @@ $userRole = $_SESSION['user']['role'] ?? 'admin';
 <nav class="sidebar-nav">
     <ul>
         <li><a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
-        <li><a href="calendar.php"><i class="fas fa-calendar"></i> Events</a></li>
+        <li><a href="events_calendar.php"><i class="fas fa-calendar"></i> Events</a></li>
         <li><a href="create.php"><i class="fas fa-plus"></i> Create Event</a></li>
         <li><a href="reports.php"><i class="fas fa-chart-bar"></i> Reports</a></li>
         <li><a href="users.php"><i class="fas fa-users"></i> User Management</a></li>

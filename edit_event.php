@@ -5,7 +5,7 @@ include 'db.php';
 
 // Check event id
 if (!isset($_GET['id'])) {
-    header('Location: calendar.php');
+    header('Location: events_calendar.php');
     exit;
 }
 
@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <button type="submit" class="btn btn-primary">Update Event</button>
-        <a href="view.php?id=<?php echo $event_id; ?>" class="btn btn-secondary">Cancel</a>
+        <a href="view.php?id=<?php echo $event_id; ?>" class="btn btn-secondary" style="background-color:red;color:blue">Cancel</a>
     </form>
 </div>
 </body>

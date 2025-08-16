@@ -2,11 +2,72 @@
 requireAdmin();
 include 'header.php';
 include 'db.php';
+
+// Get filter values from GET
+$startDate = $_GET['start_date'] ?? '';
+$endDate = $_GET['end_date'] ?? '';
+$eventType = $_GET['event_type'] ?? '';
+
+// Build WHERE clauses for filters
+$whereClauses = [];
+
+if ($startDate) {
+    $startDateEscaped = $conn->real_escape_string($startDate);
+    $whereClauses[] = "start_date >= '$startDateEscaped'";
+}
+if ($endDate) {
+    $endDateEscaped = $conn->real_escape_string($endDate);
+    $whereClauses[] = "start_date <= '$endDateEscaped'";
+}
+if ($eventType) {
+    $eventTypeEscaped = $conn->real_escape_string($eventType);
+    $whereClauses[] = "event_type = '$eventTypeEscaped'";
+}
+
+$whereSql = '';
+if (!empty($whereClauses)) {
+    $whereSql = ' WHERE ' . implode(' AND ', $whereClauses);
+}
+
+// Total Events respecting filters
+$totalEventsQuery = "SELECT COUNT(*) as total FROM events $whereSql";
+$result = $conn->query($totalEventsQuery);
+$totalEvents = $result->fetch_assoc()['total'] ?? 0;
+
+// Total Participants respecting filtered events
+$totalParticipantsQuery = "
+    SELECT COUNT(*) as total FROM registrations r
+    JOIN events e ON r.event_id = e.id
+    $whereSql
+";
+$result = $conn->query($totalParticipantsQuery);
+$totalParticipants = $result->fetch_assoc()['total'] ?? 0;
+
+// Attendance rate respecting filtered events
+$attendedQuery = "
+    SELECT COUNT(*) as attended FROM registrations r
+    JOIN events e ON r.event_id = e.id
+    $whereSql AND r.attended = 1
+";
+
+$totalRegQuery = "
+    SELECT COUNT(*) as total FROM registrations r
+    JOIN events e ON r.event_id = e.id
+    $whereSql
+";
+
+$result = $conn->query($attendedQuery);
+$attended = $result->fetch_assoc()['attended'] ?? 0;
+
+$result = $conn->query($totalRegQuery);
+$totalReg = $result->fetch_assoc()['total'] ?? 0;
+
+$attendanceRate = $totalReg > 0 ? round(($attended / $totalReg) * 100) : 0;
+
 ?>
 
 <div class="dashboard">
     <aside class="sidebar">
-        <!-- Same sidebar as dashboard.php -->
         <?php include 'sidebar.php'; ?>
     </aside>
     
@@ -17,20 +78,20 @@ include 'db.php';
             <form method="get" action="">
                 <div class="filter-group">
                     <label for="start_date">From:</label>
-                    <input type="date" id="start_date" name="start_date">
+                    <input type="date" id="start_date" name="start_date" value="<?= htmlspecialchars($startDate) ?>">
                 </div>
                 <div class="filter-group">
                     <label for="end_date">To:</label>
-                    <input type="date" id="end_date" name="end_date">
+                    <input type="date" id="end_date" name="end_date" value="<?= htmlspecialchars($endDate) ?>">
                 </div>
                 <div class="filter-group">
                     <label for="event_type">Event Type:</label>
                     <select id="event_type" name="event_type">
-                        <option value="">All Types</option>
-                        <option value="academic">Academic</option>
-                        <option value="cultural">Cultural</option>
-                        <option value="workshop">Workshop</option>
-                        <option value="conference">Conference</option>
+                        <option value="" <?= $eventType === '' ? 'selected' : '' ?>>All Types</option>
+                        <option value="academic" <?= $eventType === 'academic' ? 'selected' : '' ?>>Academic</option>
+                        <option value="cultural" <?= $eventType === 'cultural' ? 'selected' : '' ?>>Cultural</option>
+                        <option value="workshop" <?= $eventType === 'workshop' ? 'selected' : '' ?>>Workshop</option>
+                        <option value="conference" <?= $eventType === 'conference' ? 'selected' : '' ?>>Conference</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Apply Filters</button>
@@ -40,39 +101,17 @@ include 'db.php';
         <div class="report-cards">
             <div class="report-card">
                 <h3>Total Events</h3>
-                <?php
-                $totalEventsQuery = "SELECT COUNT(*) as total FROM events";
-                $result = $conn->query($totalEventsQuery);
-                $total = $result->fetch_assoc()['total'];
-                ?>
-                <p><?php echo $total; ?></p>
+                <p><?= $totalEvents ?></p>
             </div>
             
             <div class="report-card">
                 <h3>Total Participants</h3>
-                <?php
-                $totalParticipantsQuery = "SELECT COUNT(*) as total FROM registrations";
-                $result = $conn->query($totalParticipantsQuery);
-                $total = $result->fetch_assoc()['total'];
-                ?>
-                <p><?php echo $total; ?></p>
+                <p><?= $totalParticipants ?></p>
             </div>
             
             <div class="report-card">
                 <h3>Attendance Rate</h3>
-                <?php
-                $attendedQuery = "SELECT COUNT(*) as attended FROM registrations WHERE attended = 1";
-                $totalRegQuery = "SELECT COUNT(*) as total FROM registrations";
-                
-                $result = $conn->query($attendedQuery);
-                $attended = $result->fetch_assoc()['attended'];
-                
-                $result = $conn->query($totalRegQuery);
-                $total = $result->fetch_assoc()['total'];
-                
-                $rate = $total > 0 ? round(($attended / $total) * 100) : 0;
-                ?>
-                <p><?php echo $rate; ?>%</p>
+                <p><?= $attendanceRate ?>%</p>
             </div>
         </div>
         
@@ -93,22 +132,26 @@ include 'db.php';
                 </thead>
                 <tbody>
                     <?php
-                    $registrationsQuery = "SELECT r.id, r.registration_date, r.attended, 
-                                         e.title as event_title, 
-                                         u.name as user_name 
-                                         FROM registrations r
-                                         JOIN events e ON r.event_id = e.id
-                                         JOIN users u ON r.user_id = u.id
-                                         ORDER BY r.registration_date DESC
-                                         LIMIT 10";
+                    $registrationsQuery = "
+                        SELECT r.id, r.registration_date, r.attended, 
+                               e.title as event_title, 
+                               u.name as user_name 
+                        FROM registrations r
+                        JOIN events e ON r.event_id = e.id
+                        JOIN users u ON r.user_id = u.id
+                        $whereSql
+                        ORDER BY r.registration_date DESC
+                        LIMIT 10
+                    ";
+
                     $result = $conn->query($registrationsQuery);
-                    
-                    if ($result->num_rows > 0) {
+
+                    if ($result && $result->num_rows > 0) {
                         while($row = $result->fetch_assoc()) {
                             echo '<tr>';
                             echo '<td>'.htmlspecialchars($row['event_title']).'</td>';
                             echo '<td>'.htmlspecialchars($row['user_name']).'</td>';
-                            echo '<td>'.formatDateTime($row['registration_date']).'</td>';
+                            echo '<td>'.htmlspecialchars($row['registration_date']).'</td>';
                             echo '<td>'.($row['attended'] ? 'Yes' : 'No').'</td>';
                             echo '</tr>';
                         }
@@ -125,7 +168,6 @@ include 'db.php';
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Sample chart data - in a real app, you would fetch this via AJAX
     const ctx = document.getElementById('eventsChart').getContext('2d');
     const eventsChart = new Chart(ctx, {
         type: 'bar',
