@@ -18,7 +18,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    header('Location: /events/calendar.php');
+    header('Location: events_calendar.php');
     exit;
 }
 
@@ -48,7 +48,7 @@ if (isLoggedIn()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="css\stele.css">
+    <link rel="stylesheet" href="css/stele.css">
 </head>
 <body>
     

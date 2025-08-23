@@ -177,7 +177,7 @@ form select:hover {
             <input type="password" id="password" name="password" /><br>
 
             <button type="submit" class="btn btn-primary">Update User</button>
-            <a href="users.php" class="btn btn-secondary">Cancel</a>
+            <a href="users.php" class="btn btn-secondary" style="background-color:red;color:blue">Cancel</a>
         </form>
     </main>
 </div>

@@ -26,8 +26,9 @@
             </div>
         </div>
         <div class="copyright">
-            <p>&copy; <?php echo date('Y'); ?> University of Gondar. All rights reserved.</p>
+            <p>&copy; 2025-<?php echo date('Y-m-d'); ?> University of Gondar. All rights reserved.</p>
         </div>
+    
     </footer>
     <script src="js/script.js"></script>
 </body>
